@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+  <title>Access features with pointer events - 4.5</title>
+
+  <style>
+    html,
+    body,
+    #viewDiv {
+      padding: 0;
+      margin: 0;
+      height: 100%;
+      width: 100%;
+    }
+
+    #info {
+      visibility: hidden;
+    }
+    .esri-popup__main-container {
+      width: 225px !important;
+    }
+  
+  </style>
+
+  <link rel="stylesheet" href="https://js.arcgis.com/4.5/esri/css/main.css">
+  <script src="https://js.arcgis.com/4.5/"></script>
+
+  <script>
+    require(["esri/config"], function(esriConfig) {
+    esriConfig.request.corsDetection = false;
+    });
+    require([
+      "esri/Map",
+      "esri/views/MapView",
+      "esri/layers/FeatureLayer",
+      "dojo/domReady!"
+    ], function(
+      Map,
+      MapView,
+      FeatureLayer
+    ) {
+
+      var layer = new FeatureLayer({
+        url: "https://tigerweb.geo.census.gov/arcgis/rest/services/Generalized_ACS2015/State_County/MapServer/8",
+        outFields: ["*"]
+      });
+
+      var map = new Map({
+        basemap: "streets",
+        layers: [layer]
+      });
+
+      var view = new MapView({
+        container: "viewDiv",
+        map: map,
+        center: [-98, 32],
+        zoom: 4
+      });
+      layer.minScale = 0;
+      //layer.maxScale = 0;
+      view.ui.add("info", "top-right");
+
+      // Set up an event handler for pointer-down (mobile)
+      // and pointer-move events (mouse)
+      // and retrieve the screen x, y coordinates
+      view.on("pointer-move", eventHandler);
+      view.on("pointer-down", eventHandler);
+      view.on("click", function(event){
+        view.hitTest(event)
+          .then(function(response){
+            var attributes = response.results[0].graphic.attributes;
+            var sTerm = attributes.NAME;
+            var url = "https://www.google.com/search?q="
+            window.open(url+sTerm)
+          })
+      })
+      function eventHandler(event) {
+        // the hitTest() checks to see if any graphics in the view
+        // intersect the given screen x, y coordinates
+        view.hitTest(event)
+          .then(getGraphics);
+      }
+
+      function getGraphics(response) {
+        // the topmost graphic from the click location
+        // and display select attribute values from the
+        // graphic to the user
+        var graphic = response.results[0].graphic;
+        var attributes = graphic.attributes;
+        var rName = attributes.NAME;
+
+        //document.getElementById("info").style.visibility = "visible";
+        //document.getElementById("name").innerHTML = name;
+
+        // symbolize all line segments with the given
+        // storm name with the same symbol
+        var renderer = {
+          type: "unique-value", // autocasts as new UniqueValueRenderer()
+          field: "NAME",
+          defaultSymbol: layer.renderer.symbol || layer.renderer.defaultSymbol,
+          uniqueValueInfos: [{
+            value: rName,
+            symbol: {
+              type: "simple-fill", // autocasts as new SimpleLineSymbol()
+              color: [ 128, 128, 128, 0.7 ],
+              outline: {  // autocasts as new SimpleLineSymbol()
+                color: [255, 255, 255, 0.5],
+                width: 1
+              }
+            }
+          }]
+        };
+        view.popup.dockEnabled = true;
+        view.popup.collapsed = true;
+        view.popup.open({
+          title: rName,
+          location: response.results[0].mapPoint
+        });
+        
+        layer.renderer = renderer;
+      }
+
+      view.then(function() {
+        layer.then(function() {
+          // update the default renderer's
+          // symbol when the layer loads
+          var renderer = layer.renderer.clone();
+          renderer.symbol.color = [128, 128, 128, 0.3];
+          renderer.symbol.outline.color = [255, 255, 255, 0.5];
+          renderer.symbol.outline.width = 1
+          layer.renderer = renderer;
+        });
+      });
+    });
+  </script>
+</head>
+
+<body>
+  <div id="viewDiv"></div>
+  <div id="info">
+  </div>
+</body>
+</html>‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍

@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="ScreenOrientation" content="autoRotate:disabled">
+  <meta http-equiv="Content-Security-Policy" content="default-src * self blob: data: gap:; style-src * self 'unsafe-inline' blob: data: gap:; script-src * 'self' 'unsafe-eval' 'unsafe-inline' blob: data: gap:; object-src * 'self' blob: data: gap:; img-src * self 'unsafe-inline' blob: data: gap:; connect-src self * 'unsafe-inline' blob: data: gap:; frame-src * self blob: data: gap:;">
+  <title>Tramites</title>
+
+  <!-- CSS only -->
+  <link href="css/bootstrap.css" rel="stylesheet">
+
+
+
+
+  <!--Rutas PAGE JS-->
+  <script src="https://cdn.rawgit.com/visionmedia/page.js/master/page.js"></script>
+
+  <link rel="stylesheet" href="https://unpkg.com/placeholder-loading/dist/css/placeholder-loading.min.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css" />
+
+  <!--TOASTTR-->
+  <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
+
+
+
+  <link rel="stylesheet" href="css/index.css" />
+  <!--JS-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="js/index.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/taffydb/2.7.3/taffy-min.js"></script>
+
+  <!-- UIkit CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.13.7/dist/css/uikit.min.css" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
+  <!-- UIkit JS -->
+  <script src="https://cdn.jsdelivr.net/npm/uikit@3.13.7/dist/js/uikit.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/uikit@3.13.7/dist/js/uikit-icons.min.js"></script>
+
+  <link rel="stylesheet" href="https://js.arcgis.com/4.22/esri/themes/light/main.css" />
+
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/solid.css">
+
+  <!--ICONS GOOGLE-->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <script type="text/javascript" charset="utf-8">
+    $(document).ready(function () {
+      document.addEventListener("deviceready", onDeviceReady, false); 
+
+
+    });
+
+    function onDeviceReady() {
+
+      StatusBar.overlaysWebView(false);
+      StatusBar.backgroundColorByHexString("#fff"); // => #333333
+
+      StatusBar.styleLightContent();
+      console.log(statusbar);
+
+    }
+  /*<feature name="StatusBar">
+          <param name="android-package" value="org.apache.cordova.statusbar.StatusBar" />
+  
+      </feature>*/
+  </script>
+  <!--Comienza MAPA-->
+  <script src="https://js.arcgis.com/4.22/"></script>
+  <script>
+    require(["esri/Map", "esri/views/SceneView", "esri/views/MapView", "esri/Graphic",
+      "esri/layers/GraphicsLayer", "esri/geometry/Extent", "esri/widgets/Track", "esri/widgets/Locate"], (Map, SceneView, MapView, Graphic, GraphicsLayer, Extent, Track, Locate) => {
+        const map = new Map({
+          basemap: "topo"
+        });
+
+        const view = new MapView({
+          container: "viewDiv",
+          map: map,
+          zoom:18,
+          center:[-99.1798467, 19.436737]
+        });
+
+
+       
+
+
+        //const extent = new Extent({
+        //  xmin: 99.180131,
+        //  ymin: 19.048603057861300,
+        //  xmax: -98.939323425293000,
+        //  ymax: 19.4368458,
+        //  spatialReference: 4326
+        //});
+        //view.extent = extent;
+
+        var track = new Track({
+          view: view
+        });
+        //view.ui.add(track, "bottom-right");
+
+        // The sample will start tracking your location
+        // once the view becomes ready
+
+        const locateBtn = new Locate({
+          view: view
+        });
+
+        // Add the locate widget to the top left corner of the view
+        view.ui.add(locateBtn, {
+          position: "bottom-right"
+        });
+
+
+        view.ui.remove("zoom");
+
+        const graphicsLayer = new GraphicsLayer();
+        map.add(graphicsLayer);
+        document.getElementById("tablaDatos").style.display = "none";
+
+        const point = { //Create a point
+          type: "point",
+          longitude: -99.1802361,
+          latitude: 19.4368000,
+        };
+        const simpleMarkerSymbol = {
+          type: "simple-marker",
+          style: "square",
+          color: [23, 149, 18],  // Orange
+          outline: {
+            color: [255, 255, 255], // White
+            width: 1
+          }
+        };
+
+        let symbol = {
+  type: "picture-marker",  // autocasts as new PictureMarkerSymbol()
+  url: "/img/location.png",
+  width: "182px",
+  height: "124px"
+};
+
+        const pointGraphic = new Graphic({
+          geometry: point,
+          symbol: symbol,
+          popupTemplate: {
+            title: "Oficina Central SEMARNAT",
+            collapsed: false,
+            content: `
+            <p><b>Nombre:</b>Oficina Central SEMARNAT</p>
+            <p><b>Entidad:</b>Ciudad de México</p>
+            <p><b>Municipio:</b>Ciudad de México</p>
+            <p><b>Colonia:</b> Lago Xochimilco S/N, Anáhuac I Secc, Miguel Hidalgo, 11320 Ciudad de México, CDMX</p>
+            `,
+          }
+        });
+        graphicsLayer.add(pointGraphic);
+        /*view.popup.open({
+  features: pointGraphic,  // array of graphics
+  featureMenuOpen: true, // selected features initially display in a list
+});*/
+        /*view.popup.open({
+          updateLocationEnabled: true,
+          title: "Oficina central SEMARNAT",
+            content: `
+            <p><b>Nombre:</b>Oficina central SEMARNAT</p>
+            <p><b>Entidad:</b>Ciudad de México</p>
+            <p><b>Municipio:</b>Ciudad de México</p>
+            <p><b>Colonia:</b> Lago Xochimilco S/N, Anáhuac I Secc, Miguel Hidalgo, 11320 Ciudad de México, CDMX</p>
+            `,
+        });*/
+
+        //datos
+        var data = [
+
+          {
+            "ID": 2,
+            "Nombre": "Comisión Nacional Forestal, Zapopan, Jalisco.",
+            "logo" :"/img/conafor_location.png",
+            "Long": -103.4539102,
+            "Lat": 20.6976832,
+            "Entidad": "Jalisco",
+            "Municipio": "Zapopan",
+            "Colonia": "Av. Perif. Pte. Manuel Gómez Morin 5360, San Juan de Ocotán, 45019",
+            "Claves": "conafor,Zapopan,jalisco"
+          },
+          {
+            "ID": 3,
+            "Nombre": "Comisión Nacional del Agua, Veracruz, Veracruz.",
+            "logo" :"/img/conagua_location.png",
+            "Long": -95.1831062,
+            "Lat": 18.161073,
+            "Entidad": "Veracruz",
+            "Municipio": "Hueyapan de Ocampo",
+            "Colonia": "Del Golfo 4, Benito Juarez, 95850.",
+            "Claves": "conagua,veracruz, Hueyapan de Ocampo"
+          },
+          {
+            "ID": 4,
+            "Nombre": "Secretaría de Medio Ambiente y Recursos Naturales, Merida, Yucatán.",
+            "logo" :"/img/location.png",
+            "Long": -89.6579996,
+            "Lat": 20.9845857,
+            "Entidad": "Yucatán",
+            "Municipio": "Mérida",
+            "Colonia": "C. 59ᴮ 238, Yucalpetén, 97238.",
+            "Claves": "semarnat yucatan, Yucatan, Yucatán, Mérida,SEMARNAT, Merida "
+          }
+        ];
+
+
+        $("#txtBuscaDicc").keyup(function () {
+          BuscaProgre(this.value)
+        });
+
+        function ReiniciaDat() {
+          dataFilt = data;
+          document.getElementById("txtBuscaDicc").value = "";
+        }
+
+
+
+        function BuscaPorPalabra(strPalabra) {
+          let arregloDistintosResultados = [];
+          let arrStr = "";
+          $('#tablaDatos').html("");
+          console.log(strPalabra)
+          const Box = `<div class="columns" id="llenaDatos">
+       
+      </div>`;
+          $('#tablaDatos').append(Box);
+
+          var as = $(data).filter(function (i, n) { return (String(String(n.Claves).toUpperCase()).indexOf(strPalabra.toUpperCase()) > -1) });
+          console.log(as);
+          llenabBoxConsulta(as)
+
+
+
+
+          function llenabBoxConsulta(result) {
+           if(result.length != 0){
+            for (let i = 0; i < result.length; i++) {
+              const element = result[i];
+              $('#llenaDatos').append(`
+                 <button class="column  button buttonBusqueda is-full" id="`+ element.ID + `" name="` + element.Nombre + `">` + element.Nombre + `</button>
+              `);
+
+            }
+           }else{
+            $('#llenaDatos').append(`
+                <p>No se encontraron resultados.</p>
+              `);
+           }
+            
+          }
+          $("button").click(function (e) {
+
+            document.getElementById("tablaDatos").style.display = "none";
+            document.getElementById("popupPoint").style.display = "none";
+            graphicsLayer.removeAll();
+            const idResult = parseInt(e.target.id);
+            const DBCordenadas = TAFFY(data);
+
+            const traeLatLog = DBCordenadas({ ID: idResult }).select(
+              "Lat", "Long"
+            );
+
+            const traeTodosElemt = DBCordenadas({ ID: idResult }).get();
+
+            console.log(traeTodosElemt);
+
+            document.getElementById("llenaPopup").innerHTML = "";
+
+            $('#llenaPopup').append(`
+
+            <p><b>Nombre:</b>`+ traeTodosElemt[0].Nombre + `</p>
+            <p><b>Entidad:</b> `+ traeTodosElemt[0].Entidad + `</p>
+            <p><b>Municipio:</b> `+ traeTodosElemt[0].Municipio + `</p>
+            <p><b>Colonia:</b> `+ traeTodosElemt[0].Colonia + `</p>
+     `);
+            const traeLongCero = traeLatLog[0];
+            const cordenadas = {
+              lat: traeLongCero[0],
+              long: traeLongCero[1]
+            }
+
+
+            const point = { //Create a point
+              type: "point",
+              longitude: cordenadas.long,
+              latitude: cordenadas.lat
+            };
+            const simpleMarkerSymbol = {
+              type: "simple-marker",
+              style: "square",
+              color: [23, 149, 18],  // Orange
+              outline: {
+                color: [255, 255, 255], // White
+                width: 1
+              }
+            };
+           
+            let symbol = {
+  type: "picture-marker",  // autocasts as new PictureMarkerSymbol()
+  url: traeTodosElemt[0].logo,
+  width: "54px",
+  height: "54px"
+};
+            const pointGraphic = new Graphic({
+              geometry: point,
+              symbol: symbol,
+              popupTemplate: {
+                title: traeTodosElemt[0].Nombre,
+                content: `
+                
+                <p><b>Nombre:</b>`+ traeTodosElemt[0].Nombre + `</p>
+            <p><b>Entidad:</b> `+ traeTodosElemt[0].Entidad + `</p>
+            <p><b>Municipio:</b> `+ traeTodosElemt[0].Municipio + `</p>
+            <p><b>Colonia:</b> `+ traeTodosElemt[0].Colonia + `</p>
+                `,
+              }
+            });
+            graphicsLayer.add(pointGraphic);
+
+
+
+
+
+            var zmLv;
+            zmLv = 18;
+
+            irZmmXY(cordenadas.long, cordenadas.lat, zmLv)
+          })
+
+        }
+
+        $("#cierraPop").click(function (e) {
+          document.getElementById("popupPoint").style.display = "none";
+        })
+
+
+        function BuscaProgre(strPalab) {
+
+          if (strPalab != "") {
+            document.getElementById("tablaDatos").style.display = "block";
+            BuscaPorPalabra(strPalab);
+          }
+          else {
+            ReiniciaDat();
+            document.getElementById("tablaDatos").style.display = "none";
+            //document.getElementById("popupPoint").style.display = "none";
+          }
+        }
+
+
+        function irZmmXY(PLong, PLat, PzmLv) {
+          view.goTo({
+            target: [parseFloat(PLong), parseFloat(PLat)], zoom: PzmLv
+          })
+        }
+
+
+      });
+
+  </script>
+  <!--Termina Mapa-->
+</head>
+<!--NAV-->
+<nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="material-icons md-light md-36 regresa" id="regresaBCK" onclick="history.go(-1)">&#xe5c4;</a>
+    <a class="navbar-item" href="/" id="tituloNav"> MEDIO AMBIENTE </a>
+
+    <!--<a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample" onclick="document.querySelector('.navbar-menu').classList.toggle('is-active');document.querySelector('.navbar-burger').classList.toggle('is-active');">-->
+
+    <a role="button" id="btnFiltro" aria-label="menu" href="#offcanvas-slide" class="uk-button-default navbar-burger"
+      uk-toggle style="display: none">
+      <span><i class="fa fa-filter" aria-hidden="false"></i></span>
+    </a>
+  </div>
+</nav>
+<!--FIN NAV-->
+
+<nav class="navigation-bar">
+  <ul class="list-items">
+    <span class="pointer"></span>
+    <li class="item active">
+      <a class="link" href="/vbetas/appTram/Beta/">
+        <span class="material-icons md-light md-36">&#xe88a;</span>
+      </a>
+    </li>
+    <li class="item">
+      <a class="link" href="/vbetas/appTram/Beta/buscar">
+        <span class="material-icons md-light md-36">&#xe8b6;</span>
+      </a>
+    </li>
+    <li class="item">
+      <a class="link" href="/vbetas/appTram/Beta/mapa">
+        <span class="material-icons md-light md-36">&#xe0c8;</span>
+      </a>
+    </li>
+    <li class="item">
+      <a class="link" href="/vbetas/appTram/Beta/info">
+        <span class="material-icons md-light md-36">&#xe88e;</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+
+<div id="offcanvas-slide" uk-offcanvas>
+  <div class="uk-offcanvas-bar">
+    <ul class="uk-nav uk-nav-default">
+      <li class="uk-active">
+        <div class="tags" id="historial">
+        </div>
+      </li><br>
+      <p style="color: black;">Filtrar por:</p>
+      <br>
+      <div class="columns is-mobile">
+        <div class="column filtros button" id="UR">DEPENDENCIA</div>
+        <div class="column filtros button" id="tema">TEMA</div>
+      </div>
+      <div class="buttons is-mobile" id="filtrosDiv">
+
+      </div>
+    </ul>
+  </div>
+
+</div>
+
+
+
+
+<body style="display: none;">
+  <!-- Preloader Start 
+     <div id="main-preloader" class="main-preloader semi-dark-background">
+      <div class="main-preloader-inner center">
+
+          <span class="preloader-percentage center ">
+            <div class="is-loading loader-wrapper">
+              <div class="container is-4by3">
+                <img class="imgPrincipal" src="img/logos.png" alt="" id="splash" />
+              </div>
+              
+            </div>
+          </span>
+          <div class="">
+              <div class="preloader-bar">
+                <div class="splash container"><br>
+                  <p class="is-small">
+                    Copyright 2022 SEMARNAT<BR>
+                    Av. Ejército Nacional 223,<BR>
+                    Col. Anáhuac l, Ciudad de México. C.P. 11320
+                  </p>
+                </div>
+              </div> Percentage Precess Bar 
+          </div>
+
+      </div>
+  </div>
+Preloader Start -->
+  <!--SPLASH-->
+  <div class="" style="overflow: hidden;">
+    <div class="loader-wrapper" style="overflow: hidden;">
+      <div class="is-loading">
+        <div class="container is-4by3">
+          <img class="imgPrincipal" src="img/logos.png" alt="" id="splash" />
+        </div>
+
+      </div>
+      <div class="splash"><br>
+        <p class="content is-small">
+          Copyright 2022 SEMARNAT<BR>
+          Av. Ejército Nacional 223,<BR>
+          Col. Anáhuac l, Ciudad de México. C.P. 11320
+        </p>
+      </div>
+    </div>
+  </div>
+  <!--FIN SPLASH-->
+  <section class="section" id="menu">
+    <div class="container is-hidden">
+      <!--<div class="is-full" id="click">
+        <a href="/atribuciones"><div class="row btnMPrin" id="atribuciones"><div class="col-3 is-justify-content-center"><img class="imgPrincipalhv" src="img/pri_uno.png"></div><div class="col-9">Atribuiciones en materia ambiental</div></div></a>
+        <a href="/dependencias"><div class="row  btnMPrin" id="UR"><div class="col-3 is-justify-content-center"><img class="imgPrincipalhv" src="img/pri_dos.png"></div><div class="col-9 centered">Sector ambiental</div></div></a>
+        <a href="/temas"><div class="row btnMPrin is-flex-tablet-only" id="CPT"><div class="col-3 is-justify-content-center"><img class="imgPrincipalhv" src="img/pri_tres.png"></div><div class="col-9 centered">Temas</div></div></a>
+        <a href="/apoyos"><div class="row btnMPrin" id="ASA"><div class="col-3 is-justify-content-center"><img class="imgPrincipalhv" src="img/pri_cuatro.png"></div><div class="col-9 centered">Apoyos del sector</div></div></a>
+        <a href="/servicios"><div class="row btnMPrin" id="ASA"><div class="col-3 is-justify-content-center"><img class="imgPrincipalhv" src="img/pri_cinco.png"></div><div class="col-9 centered">Servicios del sector</div></div></a>
+         <a href="/tramites"><div class="row btnMPrin" id="tramite"><div class="col-3 is-justify-content-center"><img  class="imgPrincipalhv" src="img/pri_cinco.png"></div><div class="col-9 centered">Trámites del sector</div></div></a>
+         <a href="/reporte"><div class="row btnMPrin" id="RAC"><div class="col-3 is-justify-content-center"><img class="imgPrincipalhv" src="img/pri_seis.png"></div><div class="col-9 ">Reporte ambiental ciudadano</div></div></a>
+         <a href="/informacion"><div class="row btnMPrin" id="INF"><div class="col-3 is-justify-content-center"><img class="imgPrincipalhv" src="img/pri_siete.png"></div><div class="col-9 ">Información ambiental</div></div></a>
+        </div>-->
+    </div>
+  </section>
+  <a href="#offcanvas-slide" id="floats" uk-toggle class="float">
+
+    <span class="material-icons md-light md-36 my-float">&#xef4f;</span>
+  </a>
+
+  <div class="tablaDatosss" id="tablaDatos" width="100%"></div>
+
+  </div>
+
+  <div id="optionsDiv2">
+    <div id="dvBusca">
+      <div class="control has-icons-left has-icons-right">
+        <input class="input is-rounded is-medium" type="search" ID="txtBuscaDicc" placeholder="Buscar">
+        <span class="icon is-left">
+          <i class="fas fa-search"></i>
+        </span>
+      </div>
+    </div>
+
+  </div>
+  <div class="columns" id="popupPoint">
+    <div class="column" style="text-align: end;">
+      <span class="icon is-rigth" id="cierraPop">
+        <i class="fa fa-times"></i>
+      </span>
+    </div>
+    <div class="column" id="llenaPopup">
+
+    </div>
+  </div>
+  </div>
+  <div id="viewDiv"></div>
+  <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+ <!--<script src="js/cordova.js"></script>-->
+</body>
+
+</html>

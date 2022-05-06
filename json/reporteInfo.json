@@ -1,0 +1,66 @@
+[
+  {
+    "tipo": "informacion",
+    "id": "sniarn",
+    "titulo": "Sistema Nacional de Información Ambiental y de Recursos Naturales",
+    "link": "https://www.gob.mx/semarnat/acciones-y-programas/sistema-nacional-de-informacion-ambiental-y-de-recursos-naturales",
+    "img": "/img/sniarn.png",
+    "describe": "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dolores, qui! Non molestias laudantium dolorem eos dolor natus? Excepturi ut quod cumque dolorem rerum ullam eligendi, vel rem dolor odit sequi."
+  },
+  {
+    "tipo": "informacion",
+    "id": "Conanp",
+    "titulo": "Sistema Nacional de Áreas Naturales Protegidas",
+    "link": "https://www.gob.mx/conanp",
+    "img": "/img/conanp.png",
+    "describe": "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dolores, qui! Non molestias laudantium dolorem eos dolor natus? Excepturi ut quod cumque dolorem rerum ullam eligendi, vel rem dolor odit sequi."
+  },
+  {
+    "tipo": "informacion",
+    "id": "conagua",
+    "titulo": "Sistema Nacional de Información del Agua",
+    "link": "https://www.gob.mx/conagua",
+    "img": "/img/conagua.png",
+    "describe": "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dolores, qui! Non molestias laudantium dolorem eos dolor natus? Excepturi ut quod cumque dolorem rerum ullam eligendi, vel rem dolor odit sequi."
+  },
+  {
+    "tipo": "informacion",
+    "id": "CONABIO",
+    "titulo": "Sistema Nacional de Información sobre Biodiversidad",
+    "link": "https://www.gob.mx/conabio",
+    "img": "/img/conabio.png",
+    "describe": "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dolores, qui! Non molestias laudantium dolorem eos dolor natus? Excepturi ut quod cumque dolorem rerum ullam eligendi, vel rem dolor odit sequi."
+  },
+  {
+    "tipo": "informacion",
+    "id": "CONAFOR",
+    "titulo": "Sistema Nacional de Información Forestal",
+    "link": "https://www.gob.mx/conafor",
+    "img": "/img/conafor.png",
+    "describe": "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dolores, qui! Non molestias laudantium dolorem eos dolor natus? Excepturi ut quod cumque dolorem rerum ullam eligendi, vel rem dolor odit sequi."
+  },
+  {
+    "tipo": "reporteAMC",
+    "id": "incendiosForestales",
+    "titulo": "Incendios forestales",
+    "link": "https://www.gob.mx/conafor",
+    "tituloCorto": "CONAFOR",
+    "img": "/img/bot_ter_uno.png",
+    "telefono":"800 737 00 00",
+    "icono": "/img/bot_call.png",
+    "imgbck": "/img/incendio.jpeg",
+   "describe": "La CONAFOR exhorta a la población a reportar incendios forestales, disponible las 24 horas del día durante todo el año."
+  },
+  {
+    "tipo": "reporteAMC",
+    "id": "reporteCiudadano",
+    "titulo": "Reporte ciudadano",
+    "tituloCorto": "PROFEPA",
+    "link": "https://www.profepa.gob.mx/innovaportal/v/4974/1/mx/haz_tu_denuncia.html",
+    "telefono":"800 776 33 72",
+    "icono": "/img/bot_call.png",
+    "img": "/img/bot_ter_dos.png",
+    "imgbck": "/img/profepa.jpeg",
+   "describe": "Realizar una denuncia ante la Procuraduría Federal de Protección al Ambiente es muy sencillo. La denuncia formal se puede presentar a través de los siguientes canales."
+  }
+]
